@@ -187,6 +187,13 @@
       <span class="castle">🏰</span> プレゼントを受け取る
     </a>
   </section>
+
+  <!-- Expired -->
+  <section class="stage" id="expired">
+    <p class="eyebrow">Thank you</p>
+    <h1 class="for-name">またね</h1>
+    <p class="sub">このページの公開期間は終了しました。<br>すてきな一日をありがとう 🎂</p>
+  </section>
 </div>
 
 <div class="mini" id="mini">Kanon san ・ Happy Birthday</div>
@@ -359,4 +366,22 @@ document.getElementById('cake').addEventListener('click',()=>{
 
 // keep confetti raining gently on final stage
 setInterval(()=>{ if(stage===3 && Math.random()<.5) confettiBurst(); }, 2600);
+
+// expiry: becomes unavailable from 2026-11-11 00:00 JST (UTC+9)
+(function(){
+  const EXPIRE = Date.UTC(2026,10,10,15,0,0); // 2026-11-11 00:00 JST
+  function checkExpiry(){
+    if(Date.now() >= EXPIRE){
+      fireworks=false; particles.length=0;
+      show('expired'); stage=-1;
+      document.getElementById('mini').textContent='Kanon san ・ Thank you';
+      return true;
+    }
+    return false;
+  }
+  if(!checkExpiry()){
+    // if the page is left open across the deadline, switch over automatically
+    setInterval(checkExpiry, 30000);
+  }
+})();
 </script>
