@@ -1,0 +1,362 @@
+<title>Kanon san Happy Birthday</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Zen+Maru+Gothic:wght@500;700&display=swap">
+<style>
+  /* Layout concept: full-bleed night sky, centered single-column stage that advances on tap, canvas behind for stars/fireworks/confetti */
+  :root{
+    --night-top:#0b1026;
+    --night-bot:#1a1140;
+    --ink:#fdf6ff;
+    --muted:#c8c0e8;
+    --gold:#ffd97a;
+    --gold-deep:#ffb84d;
+    --pink:#ff9ec7;
+    --mint:#8be9d6;
+    --disney:#1b64d1;
+    --disney-glow:rgba(90,160,255,.55);
+    color-scheme: dark;
+    --disp:"Dancing Script", "Zen Maru Gothic", cursive;
+    --body:"Zen Maru Gothic", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--body);
+    color:var(--ink);
+    background:radial-gradient(130% 100% at 50% 0%, var(--night-bot) 0%, var(--night-top) 70%);
+    overflow:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+
+  .wrap{
+    position:relative;z-index:2;
+    height:100%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    padding:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));
+    padding-block:24px;
+  }
+  .stage{
+    display:none;flex-direction:column;align-items:center;justify-content:center;
+    gap:18px;max-width:420px;width:100%;
+    animation:fade .7s ease both;
+  }
+  .stage.on{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .eyebrow{
+    font-size:.82rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--gold);font-weight:700;margin:0;opacity:.9;
+  }
+  .for-name{
+    font-family:var(--disp);font-weight:700;
+    font-size:clamp(2.6rem,16vw,4.2rem);line-height:1;margin:0;
+    background:linear-gradient(180deg,#fff 0%,var(--gold) 60%,var(--gold-deep) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 4px 22px rgba(255,200,110,.35));
+    text-wrap:balance;
+  }
+  .sub{color:var(--muted);margin:0;font-size:1rem;line-height:1.7}
+
+  /* Start button / Disney button share this base */
+  .btn{
+    appearance:none;border:0;cursor:pointer;
+    font-family:var(--body);font-weight:700;font-size:1.05rem;
+    color:#2a1800;background:linear-gradient(180deg,#fff2cf,var(--gold) 55%,var(--gold-deep));
+    padding:15px 30px;border-radius:999px;
+    box-shadow:0 10px 30px rgba(255,186,77,.35), inset 0 1px 0 rgba(255,255,255,.7);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{transform:scale(.96)}
+  .btn.pulse{animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 10px 30px rgba(255,186,77,.35)}50%{box-shadow:0 10px 44px rgba(255,186,77,.7)}}
+
+  .hb{
+    font-family:var(--disp);font-weight:700;
+    font-size:clamp(3rem,20vw,5rem);line-height:.95;margin:0;
+    color:#fff;filter:drop-shadow(0 4px 26px rgba(255,160,210,.5));
+    text-wrap:balance;
+  }
+  .hb .pink{color:var(--pink)}
+  .hint{
+    color:var(--muted);font-size:.9rem;opacity:.85;margin-top:6px;
+    animation:blink 1.8s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{opacity:.35}50%{opacity:.95}}
+
+  /* Cake */
+  .cake-stage .sub b{color:var(--gold)}
+  .cake{position:relative;width:min(78vw,300px);margin:6px auto 2px;cursor:pointer;user-select:none}
+  .candles{display:flex;justify-content:center;gap:16px;margin-bottom:-6px;position:relative;z-index:3}
+  .candle{width:9px;height:46px;border-radius:4px;background:repeating-linear-gradient(45deg,#ff9ec7 0 6px,#fff 6px 12px);position:relative}
+  .flame{
+    position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+    width:13px;height:19px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+    background:radial-gradient(circle at 50% 70%, #fff 0%, var(--gold) 35%, var(--gold-deep) 70%, #ff6a00 100%);
+    box-shadow:0 0 16px 5px rgba(255,180,80,.75);
+    transform-origin:50% 100%;
+    animation:flick .28s ease-in-out infinite alternate;
+  }
+  @keyframes flick{from{transform:translateX(-50%) scaleY(1) rotate(-3deg)}to{transform:translateX(-50%) scaleY(1.12) rotate(3deg)}}
+  .candle.out .flame{opacity:0;transform:translateX(-50%) scale(.2);transition:all .35s ease}
+  .candle.out::after{
+    content:"";position:absolute;top:-22px;left:50%;width:7px;height:7px;border-radius:50%;
+    background:rgba(220,220,230,.55);
+    animation:smoke 1s ease-out forwards;
+  }
+  @keyframes smoke{from{opacity:.6;transform:translate(-50%,0) scale(.6)}to{opacity:0;transform:translate(-50%,-30px) scale(2.2)}}
+  .tiers{position:relative;z-index:2}
+  .tier{margin:0 auto;border-radius:12px;box-shadow:inset 0 -8px 0 rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.35)}
+  .t1{width:58%;height:34px;background:linear-gradient(#ffe3ef,#ffc3dc);border-radius:12px 12px 4px 4px}
+  .t2{width:80%;height:42px;background:linear-gradient(#fff0c9,#ffd98a);margin-top:-4px}
+  .t3{width:100%;height:50px;background:linear-gradient(#e7d4ff,#c6a8ff);margin-top:-4px}
+  .drip{height:14px;background:
+     radial-gradient(10px 12px at 12px 0,#fff 60%,transparent 61%) repeat-x;
+     background-size:34px 14px;margin-top:-10px;position:relative;z-index:2;opacity:.9}
+
+  .msg{
+    color:var(--ink);font-size:1.06rem;line-height:1.95;margin:0;
+    font-weight:500;max-width:360px;text-wrap:pretty;
+  }
+  .msg .hl{color:var(--gold);font-weight:700}
+  .ribbon{color:var(--mint);font-size:.9rem;letter-spacing:.12em;margin:0}
+  .disney-btn{
+    color:#fff;
+    background:linear-gradient(180deg,#5aa0ff,var(--disney) 60%,#1348a0);
+    box-shadow:0 12px 34px var(--disney-glow), inset 0 1px 0 rgba(255,255,255,.4);
+    text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+    font-size:1.08rem;
+  }
+  .disney-btn:active{transform:scale(.96)}
+  .castle{font-size:1.2rem}
+  .gift-note{color:var(--muted);font-size:.82rem;margin:0;line-height:1.6}
+  .mini{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:3;
+    text-align:center;color:rgba(200,192,232,.5);font-size:.72rem;letter-spacing:.1em}
+</style>
+
+<canvas id="sky"></canvas>
+
+<div class="wrap">
+  <!-- Stage 0: start -->
+  <section class="stage on" id="s0">
+    <p class="eyebrow">A Little Surprise For</p>
+    <h1 class="for-name">Kanon&nbsp;san</h1>
+    <p class="sub">誕生日おめでとう！</p>
+    <button class="btn pulse" id="start">タップしてはじめる ✦</button>
+  </section>
+
+  <!-- Stage 1: happy birthday -->
+  <section class="stage" id="s1">
+    <p class="eyebrow">2026/11/10</p>
+    <h1 class="hb">Happy<br><span class="pink">Birthday!</span></h1>
+    <p class="sub">お誕生日おめでとう、かのんちゃん 🎂</p>
+    <button class="btn" id="toCake">つぎへ →</button>
+  </section>
+
+  <!-- Stage 2: cake -->
+  <section class="stage cake-stage" id="s2">
+    <p class="eyebrow">Make a wish</p>
+    <div class="cake" id="cake">
+      <div class="candles" id="candles">
+        <div class="candle"><span class="flame"></span></div>
+        <div class="candle"><span class="flame"></span></div>
+        <div class="candle"><span class="flame"></span></div>
+      </div>
+      <div class="tiers">
+        <div class="tier t1"></div>
+        <div class="drip"></div>
+        <div class="tier t2"></div>
+        <div class="drip"></div>
+        <div class="tier t3"></div>
+      </div>
+    </div>
+    <p class="sub">ケーキを<b>タップ</b>して、<br>ろうそくを消して…願いごとを 🌠</p>
+  </section>
+
+  <!-- Stage 3: message + disney -->
+  <section class="stage" id="s3">
+    <p class="msg">
+      いつもありがとう。<br>
+      これからもよろしくね
+    </p>
+    <a class="btn disney-btn" id="disneyBtn" href="#" target="_blank" rel="noopener">
+      <span class="castle">🏰</span> チケットを受け取る
+    </a>
+  </section>
+</div>
+
+<div class="mini" id="mini">Kanon san ・ Happy Birthday</div>
+
+<script>
+const DISNEY_URL = "https://contents-portal.tokyodisneyresort.jp/app-link/lp_group_join.html?linkType=groupbb0285682aca0ba0e21b06ed0781014f5c5786784d29441354a8c0bbc83ce2cc4c3108dc3fa1cc5d50af58af8c89dc8cc40f4888bf9534c71d889ecb63a3213d";
+document.getElementById('disneyBtn').href = DISNEY_URL;
+
+/* ---------- Canvas: stars + fireworks + confetti ---------- */
+const cv = document.getElementById('sky');
+const ctx = cv.getContext('2d');
+let W,H,DPR;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = cv.clientWidth; H = cv.clientHeight;
+  cv.width = W*DPR; cv.height = H*DPR;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  makeStars();
+}
+window.addEventListener('resize', resize);
+
+let stars=[];
+function makeStars(){
+  stars=[];
+  const n = Math.round(W*H/7000);
+  for(let i=0;i<n;i++){
+    stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,
+      tw:Math.random()*Math.PI*2,sp:Math.random()*.03+.008});
+  }
+}
+
+let particles=[];       // fireworks sparks + confetti
+let fireworks=true;
+let reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function burst(x,y,hue,count,spread){
+  count = count||46;
+  for(let i=0;i<count;i++){
+    const a=Math.random()*Math.PI*2, sp=Math.random()*(spread||3.4)+.6;
+    particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+      life:1,decay:Math.random()*.012+.008,
+      col:`hsl(${hue+Math.random()*40-20},95%,${60+Math.random()*20}%)`,
+      size:Math.random()*2.4+1.2,g:.03,type:'spark'});
+  }
+}
+function confettiBurst(){
+  const cols=['#ffd97a','#ff9ec7','#8be9d6','#9b8bff','#fff','#ffb84d'];
+  for(let i=0;i<120;i++){
+    particles.push({x:Math.random()*W,y:-20-Math.random()*H*.3,
+      vx:(Math.random()-.5)*1.6,vy:Math.random()*1.8+1.2,
+      life:1,decay:.004,
+      col:cols[i%cols.length],size:Math.random()*5+3,
+      g:.02,rot:Math.random()*6,vr:(Math.random()-.5)*.3,type:'confetti'});
+  }
+}
+
+let fwTimer=0;
+function loop(t){
+  ctx.clearRect(0,0,W,H);
+  // stars
+  for(const s of stars){
+    s.tw+=s.sp;
+    const a=.4+Math.abs(Math.sin(s.tw))*.6;
+    ctx.globalAlpha=a; ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+
+  // auto fireworks during celebration
+  if(fireworks && !reduce){
+    fwTimer--;
+    if(fwTimer<=0){
+      burst(W*(.2+Math.random()*.6), H*(.2+Math.random()*.35),
+            Math.random()*360, 44, 3.6);
+      fwTimer=38+Math.random()*34;
+    }
+  }
+
+  // particles
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.life-=p.decay;
+    if(p.type==='confetti'){
+      p.rot+=p.vr;
+      ctx.globalAlpha=Math.max(0,Math.min(1,p.life*1.3));
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+      ctx.fillStyle=p.col;ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*.6);
+      ctx.restore();
+    }else{
+      ctx.globalAlpha=Math.max(0,p.life);
+      ctx.fillStyle=p.col;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*p.life,0,7);ctx.fill();
+    }
+    if(p.life<=0 || p.y>H+40) particles.splice(i,1);
+  }
+  ctx.globalAlpha=1;
+  requestAnimationFrame(loop);
+}
+resize();
+requestAnimationFrame(loop);
+
+/* ---------- Audio: Happy Birthday melody ---------- */
+let actx=null;
+function note(freq,start,dur,vol){
+  const o=actx.createOscillator(), g=actx.createGain();
+  o.type='triangle'; o.frequency.value=freq;
+  o.connect(g); g.connect(actx.destination);
+  const t0=actx.currentTime+start;
+  g.gain.setValueAtTime(0,t0);
+  g.gain.linearRampToValueAtTime(vol,t0+.04);
+  g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+  o.start(t0); o.stop(t0+dur+.05);
+}
+function playHB(){
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==='suspended') actx.resume();
+  }catch(e){return;}
+  const N={G3:196,A3:220,Bb3:233,B3:247,C4:261.6,D4:293.7,Eb4:311.1,E4:329.6,
+           F4:349.2,G4:392,A4:440,Bb4:466.2,B4:493.9,C5:523.3,D5:587.3,F5:698.5};
+  // Happy Birthday in C
+  const seq=[
+    ['G4',.5],['G4',.5],['A4',1],['G4',1],['C5',1],['B4',2],
+    ['G4',.5],['G4',.5],['A4',1],['G4',1],['D5',1],['C5',2],
+    ['G4',.5],['G4',.5],['G5',1],['E5',1],['C5',1],['B4',1],['A4',2],
+    ['F5',.5],['F5',.5],['E5',1],['C5',1],['D5',1],['C5',2]
+  ];
+  const extra={G5:784,E5:659.3};
+  const freq=k=>N[k]||extra[k];
+  let t=0.05; const beat=0.42;
+  for(const [k,b] of seq){ note(freq(k), t, b*beat*0.95, 0.14); t+=b*beat; }
+}
+
+/* ---------- Stage flow ---------- */
+function show(id){
+  document.querySelectorAll('.stage').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+let stage=0;
+
+document.getElementById('start').addEventListener('click',()=>{
+  confettiBurst();
+  if(!reduce){ for(let i=0;i<5;i++) setTimeout(()=>burst(W*(.15+Math.random()*.7),H*.3,Math.random()*360,40,3.4), i*180); }
+  show('s1'); stage=1;
+});
+
+function toCake(){ show('s2'); stage=2; }
+document.getElementById('toCake').addEventListener('click',toCake);
+// tapping the s1 background also advances
+document.getElementById('s1').addEventListener('click',(e)=>{ if(e.target.id==='s1'||e.target.classList.contains('hb')||e.target.classList.contains('sub')) toCake(); });
+
+/* Cake: blow out candles one by one on tap */
+const candles=[...document.querySelectorAll('.candle')];
+let outCount=0;
+document.getElementById('cake').addEventListener('click',()=>{
+  const next=candles.find(c=>!c.classList.contains('out'));
+  if(next){
+    next.classList.add('out');
+    outCount++;
+    // little puff of confetti above cake
+    const r=document.getElementById('cake').getBoundingClientRect();
+    burst(r.left+r.width/2, r.top+20, 150, 18, 2.2);
+    if(outCount===candles.length){
+      setTimeout(()=>{ confettiBurst(); show('s3'); stage=3;
+        document.getElementById('mini').textContent='🎉  Make it a magical day  🎉';
+      }, 650);
+    }
+  }
+});
+
+// keep confetti raining gently on final stage
+setInterval(()=>{ if(stage===3 && Math.random()<.5) confettiBurst(); }, 2600);
+</script>
